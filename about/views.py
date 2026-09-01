@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.contrib import messages
 from .models import About
 from .forms import CollaborateForm
 
@@ -18,6 +19,12 @@ def about_detail(request):
 
     :template:`about/about.html`
     """
+
+    if request.method == "POST":
+        collaborate_form = CollaborateForm(data=request.POST)
+        if collaborate_form.is_valid():
+            collaborate_form.save()
+            messages.add_message(request, messages.SUCCESS, "Collaboration request received! I endeavor to respond within 2 working days.")
 
     queryset = About.objects.all().order_by('-updated_on').first()
     collaborate_form = CollaborateForm()
